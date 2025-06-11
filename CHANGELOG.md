@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.5.4](https://github.com/browser-actions/setup-firefox/compare/setup-firefox-v1.5.3...setup-firefox-v1.5.4) (2025-01-25)
+
+
+### Bug Fixes
+
+* Fix an off-by-one error with bz2/xz download URLs ([#626](https://github.com/browser-actions/setup-firefox/issues/626)) ([f7574dd](https://github.com/browser-actions/setup-firefox/commit/f7574dd7c71ff2cf094cdaa89735bdcb096d72e5)), closes [#625](https://github.com/browser-actions/setup-firefox/issues/625)
+
+## [1.5.3](https://github.com/browser-actions/setup-firefox/compare/setup-firefox-v1.5.2...setup-firefox-v1.5.3) (2025-01-19)
+
+
+### Bug Fixes
+
+* Coping with compression change for linux download ([#623](https://github.com/browser-actions/setup-firefox/issues/623)) ([063eed6](https://github.com/browser-actions/setup-firefox/commit/063eed68fefb6e72be98fb0c0d2d106784c79634))
+
+## [1.5.2](https://github.com/browser-actions/setup-firefox/compare/setup-firefox-v1.5.1...setup-firefox-v1.5.2) (2024-07-13)
+
+
+### Bug Fixes
+
+* sign commits and tags ([#583](https://github.com/browser-actions/setup-firefox/issues/583)) ([6bcb267](https://github.com/browser-actions/setup-firefox/commit/6bcb26740ce1d8eabe7396b856c49439c24ed139))
+
+## [1.5.1](https://github.com/browser-actions/setup-firefox/compare/setup-firefox-v1.5.0...setup-firefox-v1.5.1) (2024-05-04)
+
+
+### Bug Fixes
+
+* Adding arm64 to osx for macos-14 ([#546](https://github.com/browser-actions/setup-firefox/issues/546)) ([d880b17](https://github.com/browser-actions/setup-firefox/commit/d880b175f181fe0d1fbad6629de56872bfaf0146))
+
+## [1.5.0](https://github.com/browser-actions/setup-firefox/compare/setup-firefox-v1.4.1...setup-firefox-v1.5.0) (2024-02-29)
+
+
+### Features
+
+* firefox devedition archive versions ([#517](https://github.com/browser-actions/setup-firefox/issues/517)) ([eb151a7](https://github.com/browser-actions/setup-firefox/commit/eb151a78a71e39af170d8510d66b4e7204853a94))
+
+## [1.4.1](https://github.com/browser-actions/setup-firefox/compare/setup-firefox-v1.4.0...setup-firefox-v1.4.1) (2024-02-17)
+
+
+### Bug Fixes
+
+* using node20 ([#520](https://github.com/browser-actions/setup-firefox/issues/520)) ([b7d1295](https://github.com/browser-actions/setup-firefox/commit/b7d1295db99649993e97d0a01870e7c1f0a5100b))
+
 ## [1.4.0](https://github.com/browser-actions/setup-firefox/compare/setup-firefox-v1.3.0...setup-firefox-v1.4.0) (2023-11-11)
 
 

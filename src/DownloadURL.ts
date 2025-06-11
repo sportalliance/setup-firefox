@@ -1,6 +1,7 @@
-import { Platform, OS, Arch } from "./platform";
-import { LatestVersion } from "./versions";
+import * as core from "@actions/core";
 import { UnsupportedPlatformError } from "./errors";
+import { Arch, OS, type Platform } from "./platform";
+import { LatestVersion } from "./versions";
 
 export default interface DownloadURL {
   getURL(): string;
@@ -14,14 +15,38 @@ export class ArchiveDownloadURL implements DownloadURL {
   ) {}
 
   getURL(): string {
-    return `https://ftp.mozilla.org/pub/firefox/releases/${
-      this.version
-    }/${this.platformPart()}/${this.language}/${this.filename()}`;
+    return `https://ftp.mozilla.org/pub/${this.productPart()}/releases/${this.versionPart()}/${this.platformPart()}/${
+      this.language
+    }/${this.filename()}`;
+  }
+
+  private productPart(): string {
+    const lastIndex = this.version.lastIndexOf("-");
+    const productName = this.version.slice(0, lastIndex);
+    switch (productName) {
+      case "firefox":
+        return "firefox";
+      case "beta":
+        return "firefox";
+      case "devedition":
+        return "devedition";
+      default: // nightly, esr are unsupported
+        return "firefox";
+    }
+  }
+
+  private versionPart(): string {
+    const lastIndex = this.version.lastIndexOf("-");
+    const version = this.version.slice(lastIndex + 1);
+    return version;
   }
 
   private platformPart(): string {
     const { os, arch } = this.platform;
+
     if (os === OS.MACOS && arch === Arch.AMD64) {
+      return "mac";
+    } else if (os === OS.MACOS && arch === Arch.ARM64) {
       return "mac";
     } else if (os === OS.LINUX && arch === Arch.I686) {
       return "linux-i686";
@@ -34,18 +59,25 @@ export class ArchiveDownloadURL implements DownloadURL {
     } else if (os === OS.WINDOWS && arch === Arch.ARM64) {
       return "win64-aarch64";
     }
-    throw new UnsupportedPlatformError({ os, arch }, this.version);
+    throw new UnsupportedPlatformError({ os, arch }, this.versionPart());
   }
 
   private filename(): string {
     const { os } = this.platform;
+    core.info(
+      `This is the version number:${Number.parseInt(this.versionPart(), 10)}`,
+    );
     switch (os) {
       case OS.MACOS:
-        return `Firefox%20${this.version}.dmg`;
+        return `Firefox%20${this.versionPart()}.dmg`;
       case OS.LINUX:
-        return `firefox-${this.version}.tar.bz2`;
+        if (Number.parseInt(this.versionPart(), 10) <= 134) {
+          return `firefox-${this.versionPart()}.tar.bz2`;
+        } else {
+          return `firefox-${this.versionPart()}.tar.xz`;
+        }
       case OS.WINDOWS:
-        return `Firefox%20Setup%20${this.version}.exe`;
+        return `Firefox%20Setup%20${this.versionPart()}.exe`;
     }
   }
 }
@@ -81,6 +113,8 @@ export class LatestDownloadURL implements DownloadURL {
   private platformPart(): string {
     const { os, arch } = this.platform;
     if (os === OS.MACOS && arch === Arch.AMD64) {
+      return "osx";
+    } else if (os === OS.MACOS && arch === Arch.ARM64) {
       return "osx";
     } else if (os === OS.LINUX && arch === Arch.I686) {
       return "linux";

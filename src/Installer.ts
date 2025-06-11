@@ -1,11 +1,11 @@
+import fs from "node:fs";
+import path from "node:path";
 import * as core from "@actions/core";
-import * as tc from "@actions/tool-cache";
-import * as io from "@actions/io";
 import * as exec from "@actions/exec";
-import fs from "fs";
-import path from "path";
-import { Platform } from "./platform";
+import * as io from "@actions/io";
+import * as tc from "@actions/tool-cache";
 import { DownloadURLFactory } from "./DownloadURLFactory";
+import type { Platform } from "./platform";
 import { LatestVersion } from "./versions";
 
 export type InstallSpec = {
@@ -57,8 +57,20 @@ export class LinuxInstaller implements Installer {
 
     const archivePath = await tc.downloadTool(url);
     core.info("Extracting Firefox...");
+    const handle = await fs.promises.open(archivePath, "r");
+    const firstBytes = new Int8Array(3);
+    if (handle !== null) {
+      await handle.read(firstBytes, 0, 3, null);
+      core.debug(
+        `Extracted ${firstBytes[0]}, ${firstBytes[1]} and ${firstBytes[2]}`,
+      );
+    }
+    const options =
+      firstBytes[0] === 66 && firstBytes[1] === 90 && firstBytes[2] === 104
+        ? "xj"
+        : "xJ";
     const extPath = await tc.extractTar(archivePath, "", [
-      "xj",
+      options,
       "--strip-components=1",
     ]);
     core.info(`Successfully extracted firefox ${version} to ${extPath}`);
@@ -102,6 +114,8 @@ export class MacOSInstaller implements Installer {
     const appPath = (() => {
       if (version === LatestVersion.LATEST_NIGHTLY) {
         return path.join(mountpoint, "Firefox Nightly.app");
+      } else if (version.includes("devedition")) {
+        return path.join(mountpoint, "Firefox Developer Edition.app");
       } else {
         return path.join(mountpoint, "Firefox.app");
       }
